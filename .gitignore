@@ -1,0 +1,15 @@
+# Tuist
+Derived/
+.graph/
+# Xcode
+*.xcworkspace
+*.xcodeproj
+xcuserdata/
+# SwiftPM artifacts
+.build/
+.packages/
+# User secrets
+Secrets.plist
+*.xcconfig.local
+# macOS
+.DS_Store
