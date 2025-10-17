@@ -10,30 +10,23 @@ jobs:
     runs-on: macos-15
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Select Xcode 16
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "16"
 
-      - name: Show Xcode versions (debug)
+      - name: Install Tuist (use repo-pinned version)
         run: |
-          xcodebuild -version
-          xcode-select -p
+          curl -Ls https://install.tuist.io | bash
+          tuist version
 
-      - name: Install Tuist
-        run: brew install tuist
-
-      - name: Clean DerivedData (avoid stale macro outputs)
+      - name: Clean DerivedData
         run: rm -rf ~/Library/Developer/Xcode/DerivedData
 
-      - name: Resolve dependencies (SPM)
-        run: |
-          tuist install
-          xcodebuild -resolvePackageDependencies \
-            -workspace KakaoSearch.xcworkspace || true
+      - name: Resolve dependencies
+        run: tuist install
 
       - name: Generate Xcode workspace
         run: tuist generate
