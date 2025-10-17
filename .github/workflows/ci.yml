@@ -7,7 +7,8 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,16 +18,27 @@ jobs:
         with:
           xcode-version: "16"
 
-      - name: Install Tuist (via Homebrew)
+      - name: Show Xcode versions (debug)
+        run: |
+          xcodebuild -version
+          xcode-select -p
+
+      - name: Install Tuist
         run: brew install tuist
 
-      - name: Resolve dependencies (Tuist/Package.swift)
-        run: tuist install
+      - name: Clean DerivedData (avoid stale macro outputs)
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData
+
+      - name: Resolve dependencies (SPM)
+        run: |
+          tuist install
+          xcodebuild -resolvePackageDependencies \
+            -workspace KakaoSearch.xcworkspace || true
 
       - name: Generate Xcode workspace
         run: tuist generate
 
-      - name: Build App scheme
+      - name: Build App scheme (skip plugin validation)
         run: |
           xcodebuild \
             -workspace KakaoSearch.xcworkspace \
@@ -34,4 +46,5 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 15' \
             -configuration Debug \
             -sdk iphonesimulator \
+            -skipPackagePluginValidation \
             clean build
