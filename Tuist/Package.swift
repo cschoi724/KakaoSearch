@@ -22,7 +22,7 @@ let package = Package(
   ],
   dependencies: [
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.9.1"),
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.15.0"),
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.23.0"),
     .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1")
   ]
 )
