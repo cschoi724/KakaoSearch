@@ -1,4 +1,4 @@
-import ProjectDescription
+dimport ProjectDescription
 import ProjectDescriptionHelpers
 
 let domain = Project.target(
