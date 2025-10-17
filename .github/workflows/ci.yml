@@ -20,9 +20,9 @@ jobs:
 
       # - name: Install Tuist
       #   run: brew install tuist
-      - name: Install Tuist (pinned)
+      - name: Install Tuist
         run: |
-          curl -Ls https://install.tuist.io | bash
+          curl -Ls https://get.tuist.io | bash
           tuist version
 
       - name: Clean caches
