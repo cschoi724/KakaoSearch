@@ -30,10 +30,15 @@ jobs:
           xcodebuild -resolvePackageDependencies \
             -workspace KakaoSearch.xcworkspace || true
 
-      - name: Generate Xcode workspace
-        run: tuist generate
+      - name: Generate workspace
+        run: |
+          tuist clean
+          tuist install
+          tuist generate
 
       - name: Build App scheme
+        env:
+          SWIFT_SKIP_MACRO_EXPANSION: 1
         run: |
           xcodebuild \
             -workspace KakaoSearch.xcworkspace \
@@ -43,5 +48,4 @@ jobs:
             -sdk iphonesimulator \
             -skipMacroValidation \
             -skipPackagePluginValidation \
-            -skipMacroExpansion \
             build
