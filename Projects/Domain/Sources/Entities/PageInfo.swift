@@ -8,7 +8,7 @@
 
 public struct PageInfo: Equatable, Sendable {
 
-  public let isEnd: Bool)
+  public let isEnd: Bool
   public let totalCount: Int?
 
   public init(isEnd: Bool, totalCount: Int? = nil) {
