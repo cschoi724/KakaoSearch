@@ -43,4 +43,5 @@ jobs:
             -sdk iphonesimulator \
             -skipMacroValidation \
             -skipPackagePluginValidation \
+            -skipMacroExpansion \
             build
