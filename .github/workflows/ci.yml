@@ -20,9 +20,11 @@ jobs:
 
       # - name: Install Tuist
       #   run: brew install tuist
+
       - name: Install Tuist
         run: |
           curl -Ls https://get.tuist.io | bash
+          echo "$HOME/.tuist/bin" >> $GITHUB_PATH
           tuist version
 
       - name: Clean caches
