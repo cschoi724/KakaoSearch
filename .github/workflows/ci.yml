@@ -18,14 +18,8 @@ jobs:
         with:
           xcode-version: "16"
 
-      # - name: Install Tuist
-      #   run: brew install tuist
-
       - name: Install Tuist
-        run: |
-          curl -Ls https://get.tuist.io | bash
-          echo "$HOME/.tuist/bin" >> $GITHUB_PATH
-          tuist version
+        run: brew install tuist
 
       - name: Clean caches
         run: |
