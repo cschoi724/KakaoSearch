@@ -26,15 +26,13 @@ jobs:
 
       - name: Resolve dependencies (SPM)
         run: |
+          tuist clean
           tuist install
           xcodebuild -resolvePackageDependencies \
             -workspace KakaoSearch.xcworkspace || true
 
       - name: Generate workspace
-        run: |
-          tuist clean
-          tuist install
-          tuist generate
+        run: tuist generate
 
       - name: Build App scheme
         env:
