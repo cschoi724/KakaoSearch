@@ -46,5 +46,6 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             -sdk iphonesimulator \
+            -skipMacroValidation \
             -skipPackagePluginValidation \
             build
