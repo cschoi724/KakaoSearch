@@ -18,11 +18,17 @@ jobs:
         with:
           xcode-version: "16"
 
-      - name: Install Tuist
-        run: brew install tuist
+      # - name: Install Tuist
+      #   run: brew install tuist
+      - name: Install Tuist (pinned)
+        run: |
+          curl -Ls https://install.tuist.io | bash
+          tuist version
 
-      - name: Clean DerivedData (avoid stale macro outputs)
-        run: rm -rf ~/Library/Developer/Xcode/DerivedData
+      - name: Clean caches
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData
+          rm -rf ~/Library/Caches/org.swift.swiftpm
 
       - name: Resolve dependencies (SPM)
         run: |
@@ -32,6 +38,8 @@ jobs:
             -workspace KakaoSearch.xcworkspace || true
 
       - name: Generate workspace
+        env:
+          TUIST_EXCLUDE_MACRO_TARGETS: 1
         run: tuist generate
 
       - name: Build App scheme
