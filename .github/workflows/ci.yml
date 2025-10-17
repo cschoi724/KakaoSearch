@@ -38,13 +38,13 @@ jobs:
       - name: Generate Xcode workspace
         run: tuist generate
 
-      - name: Build App scheme (skip plugin validation)
+      - name: Build App scheme
         run: |
           xcodebuild \
             -workspace KakaoSearch.xcworkspace \
             -scheme App \
-            -destination 'generic/platform=iOS Simulator' \            
+            -destination 'generic/platform=iOS Simulator' \
             -configuration Debug \
             -sdk iphonesimulator \
             -skipPackagePluginValidation \
-            clean build
+            build
