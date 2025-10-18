@@ -7,12 +7,13 @@
 //
 
 public struct PageInfo: Equatable, Sendable {
+    public let isEnd: Bool
+    public let pageableCount: Int
+    public let totalCount: Int
 
-  public let isEnd: Bool
-  public let totalCount: Int?
-
-  public init(isEnd: Bool, totalCount: Int? = nil) {
-    self.isEnd = isEnd
-    self.totalCount = totalCount
-  }
+    public init(isEnd: Bool, pageableCount: Int, totalCount: Int) {
+        self.isEnd = isEnd
+        self.pageableCount = pageableCount
+        self.totalCount = totalCount
+    }
 }

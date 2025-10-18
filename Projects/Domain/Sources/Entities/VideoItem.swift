@@ -8,29 +8,27 @@
 
 import Foundation
 
-public struct VideoItem: Equatable, Sendable, Identifiable {
-  public var id: String { url?.absoluteString ?? title }
+public struct VideoItem: Equatable, Sendable {
+    public let title: String
+    public let url: String
+    public let datetime: String?
+    public let playTime: Int
+    public let thumbnail: String?
+    public let author: String?
 
-  public let title: String
-  public let author: String?
-  public let playTimeSeconds: Int?
-  public let url: URL?
-  public let thumbnailURL: URL?
-  public let datetime: Date?
-
-  public init(
-    title: String,
-    author: String? = nil,
-    playTimeSeconds: Int? = nil,
-    url: URL?,
-    thumbnailURL: URL? = nil,
-    datetime: Date? = nil
-  ) {
-    self.title = title
-    self.author = author
-    self.playTimeSeconds = playTimeSeconds
-    self.url = url
-    self.thumbnailURL = thumbnailURL
-    self.datetime = datetime
-  }
+    public init(
+        title: String,
+        url: String,
+        datetime: String?,
+        playTime: Int,
+        thumbnail: String?,
+        author: String?
+    ) {
+        self.title = title
+        self.url = url
+        self.datetime = datetime
+        self.playTime = playTime
+        self.thumbnail = thumbnail
+        self.author = author
+    }
 }

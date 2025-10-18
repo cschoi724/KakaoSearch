@@ -9,14 +9,14 @@
 import Foundation
 @testable import Domain
 
-final class ImageSearchRepositoryStub: ImageSearchRepository {
+final class ImageSearchRepositoryStub: ImageSearchRepository, @unchecked Sendable {
     var items: [ImageItem] = []
-    var pageInfo: PageInfo = .init(isEnd: true, totalCount: nil)
+    var pageInfo: PageInfo = .init(isEnd: true, pageableCount: 0, totalCount: 0)
     var error: Error? = nil
     let state = State()
 
-    func searchImages(query: String, page: Int, size: Int) async throws -> ([ImageItem], PageInfo) {
-        await state.update(query: query, page: page, size: size)
+    func searchImages(_ request: SearchRequest) async throws -> ([ImageItem], PageInfo) {
+        await state.update(request: request)
         if let error { throw error }
         return (items, pageInfo)
     }
@@ -25,15 +25,11 @@ final class ImageSearchRepositoryStub: ImageSearchRepository {
 extension ImageSearchRepositoryStub {
     actor State {
         var callCount = 0
-        var receivedQueries: [String] = []
-        var receivedPages: [Int] = []
-        var receivedSizes: [Int] = []
+        var receivedRequests: [SearchRequest] = []
 
-        func update(query: String, page: Int, size: Int) {
+        func update(request: SearchRequest) {
             callCount += 1
-            receivedQueries.append(query)
-            receivedPages.append(page)
-            receivedSizes.append(size)
+            receivedRequests.append(request)
         }
     }
 }

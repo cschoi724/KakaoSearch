@@ -7,7 +7,7 @@
 //
 
 public enum SearchType: Sendable {
-  case image
-  case blog
-  case video
+    case image
+    case blog
+    case video
 }

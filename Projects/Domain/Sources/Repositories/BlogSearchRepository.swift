@@ -6,6 +6,6 @@
 //  Copyright © 2025 annyeongjelly. All rights reserved.
 //
 
-public protocol BlogSearchRepository {
-  func searchBlogs(query: String, page: Int, size: Int) async throws -> ([BlogItem], PageInfo)
+public protocol BlogSearchRepository: Sendable {
+    func searchBlogs(_ request: SearchRequest) async throws -> ([BlogItem], PageInfo)
 }

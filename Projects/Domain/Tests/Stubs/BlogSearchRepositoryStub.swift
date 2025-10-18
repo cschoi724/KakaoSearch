@@ -9,14 +9,14 @@
 import Foundation
 @testable import Domain
 
-final class BlogSearchRepositoryStub: BlogSearchRepository {
+final class BlogSearchRepositoryStub: BlogSearchRepository, @unchecked Sendable {
     var items: [BlogItem] = []
-    var pageInfo: PageInfo = .init(isEnd: true, totalCount: nil)
+    var pageInfo: PageInfo = .init(isEnd: true, pageableCount: 0, totalCount: 0)
     var error: Error? = nil
     let state = State()
 
-    func searchBlogs(query: String, page: Int, size: Int) async throws -> ([BlogItem], PageInfo) {
-        await state.update(query: query, page: page, size: size)
+    func searchBlogs(_ request: SearchRequest) async throws -> ([BlogItem], PageInfo) {
+        await state.update(request: request)
         if let error { throw error }
         return (items, pageInfo)
     }
@@ -25,15 +25,11 @@ final class BlogSearchRepositoryStub: BlogSearchRepository {
 extension BlogSearchRepositoryStub {
     actor State {
         var callCount = 0
-        var receivedQueries: [String] = []
-        var receivedPages: [Int] = []
-        var receivedSizes: [Int] = []
-        
-        func update(query: String, page: Int, size: Int) {
+        var receivedRequests: [SearchRequest] = []
+
+        func update(request: SearchRequest) {
             callCount += 1
-            receivedQueries.append(query)
-            receivedPages.append(page)
-            receivedSizes.append(size)
+            receivedRequests.append(request)
         }
     }
 

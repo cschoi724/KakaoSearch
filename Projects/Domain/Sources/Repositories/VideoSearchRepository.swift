@@ -6,6 +6,6 @@
 //  Copyright © 2025 annyeongjelly. All rights reserved.
 //
 
-public protocol VideoSearchRepository {
-  func searchVideos(query: String, page: Int, size: Int) async throws -> ([VideoItem], PageInfo)
+public protocol VideoSearchRepository: Sendable {
+    func searchVideos(_ request: SearchRequest) async throws -> ([VideoItem], PageInfo)
 }

@@ -6,6 +6,6 @@
 //  Copyright © 2025 annyeongjelly. All rights reserved.
 //
 
-public protocol ImageSearchRepository {
-  func searchImages(query: String, page: Int, size: Int) async throws -> ([ImageItem], PageInfo)
+public protocol ImageSearchRepository: Sendable {
+    func searchImages(_ request: SearchRequest) async throws -> ([ImageItem], PageInfo)
 }
