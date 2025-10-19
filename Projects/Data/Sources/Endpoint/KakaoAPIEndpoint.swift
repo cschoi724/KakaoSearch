@@ -62,16 +62,17 @@ extension KakaoAPIEndpoint: APIRequest {
         ]
     }
 
-    public var queryParameters: [String : Any]? {
+    public var queryItems: [URLQueryItem] {
         switch self {
         case let .searchBlog(query, page, size, sort),
              let .searchImage(query, page, size, sort),
              let .searchVideo(query, page, size, sort):
+            let resolvedSort = sort.isEmpty ? "accuracy" : sort
             return [
-                "query": query,
-                "page": page,
-                "size": size,
-                "sort": sort
+                URLQueryItem(name: "query", value: query),
+                URLQueryItem(name: "page",  value: String(page)),
+                URLQueryItem(name: "size",  value: String(size)),
+                URLQueryItem(name: "sort",  value: resolvedSort)
             ]
         }
     }

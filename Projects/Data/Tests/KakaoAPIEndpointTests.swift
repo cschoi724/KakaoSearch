@@ -11,18 +11,21 @@ import XCTest
 @testable import Domain
 
 final class KakaoAPIEndpointTests: XCTestCase {
-
+    
     // 1) 블로그 검색
     func test_searchBlog_buildsCorrectPathAndQuery_withDefaultSort() {
         let req = SearchRequest(query: "swift", sort: "accuracy", page: 2, size: 10)
         let sut = KakaoAPIEndpoint.blog(req)
 
         XCTAssertEqual(sut.path, "/v2/search/blog")
-        let qp = sut.queryParameters
-        XCTAssertEqual(qp?["query"] as? String, "swift")
-        XCTAssertEqual(qp?["page"] as? Int, 2)
-        XCTAssertEqual(qp?["size"] as? Int, 10)
-        XCTAssertEqual(qp?["sort"] as? String, "accuracy")
+        let expectedItems = [
+            URLQueryItem(name: "query", value: "swift"),
+            URLQueryItem(name: "page", value: "2"),
+            URLQueryItem(name: "size", value: "10"),
+            URLQueryItem(name: "sort", value: "accuracy")
+        ]
+
+        XCTAssertEqual(Set(sut.queryItems), Set(expectedItems))
     }
 
     // 2) 이미지 검색
@@ -31,11 +34,13 @@ final class KakaoAPIEndpointTests: XCTestCase {
         let sut = KakaoAPIEndpoint.image(req)
 
         XCTAssertEqual(sut.path, "/v2/search/image")
-        let qp = sut.queryParameters
-        XCTAssertEqual(qp?["query"] as? String, "cat")
-        XCTAssertEqual(qp?["page"] as? Int, 1)
-        XCTAssertEqual(qp?["size"] as? Int, 5)
-        XCTAssertEqual(qp?["sort"] as? String, "recency")
+        let expectedItems = [
+            URLQueryItem(name: "query", value: "cat"),
+            URLQueryItem(name: "page", value: "1"),
+            URLQueryItem(name: "size", value: "5"),
+            URLQueryItem(name: "sort", value: "recency")
+        ]
+        XCTAssertEqual(Set(sut.queryItems), Set(expectedItems))
     }
 
     // 3) 비디오 검색
@@ -44,10 +49,12 @@ final class KakaoAPIEndpointTests: XCTestCase {
         let sut = KakaoAPIEndpoint.video(req)
 
         XCTAssertEqual(sut.path, "/v2/search/vclip")
-        let qp = sut.queryParameters
-        XCTAssertEqual(qp?["query"] as? String, "tca")
-        XCTAssertEqual(qp?["page"] as? Int, 1)
-        XCTAssertEqual(qp?["size"] as? Int, 5)
-        XCTAssertEqual(qp?["sort"] as? String, "accuracy")
+        let expectedItems = [
+            URLQueryItem(name: "query", value: "tca"),
+            URLQueryItem(name: "page", value: "1"),
+            URLQueryItem(name: "size", value: "5"),
+            URLQueryItem(name: "sort", value: "accuracy")
+        ]
+        XCTAssertEqual(Set(sut.queryItems), Set(expectedItems))
     }
 }
