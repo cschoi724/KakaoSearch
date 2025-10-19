@@ -58,24 +58,26 @@ final class VideoRemoteDataSourceTests: XCTestCase {
     }
 
     // 2) 요청 구성: 경로/쿼리 파라미터가 올바르게 반영되는가
-//    func test_request_buildsCorrectURLAndQuery() async throws {
-//        client.setNextResponse(
-//            status: 200,
-//            data: #"{"documents":[],"meta":{"total_count":0,"pageable_count":0,"is_end":true}}"#.data(using: .utf8)
-//        )
-//
-//        let req = SearchRequest(query: "ios", sort: "accuracy", page: 2, size: 5)
-//        _ = try await sut.fetchVideos(req)
-//
-//        guard let url = client.lastRequest?.url?.absoluteString else {
-//            return XCTFail("No URL captured")
-//        }
-//        XCTAssertTrue(url.contains("/v2/search/vclip"))
-//        XCTAssertTrue(url.contains("query=ios"))
-//        XCTAssertTrue(url.contains("sort=accuracy"))
-//        XCTAssertTrue(url.contains("page=2"))
-//        XCTAssertTrue(url.contains("size=5"))
-//    }
+    func test_request_buildsCorrectURLAndQuery() async throws {
+        let dummyData = #"{"documents":[],"meta":{"total_count":0,"pageable_count":0,"is_end":true}}"#.data(using: .utf8)!
+        client.setNextResponse(status: 200, data: dummyData)
+
+        let request = SearchRequest(query: "ios", sort: "accuracy", page: 3, size: 15)
+        _ = try await sut.fetchVideos(request)
+
+        guard let url = client.lastRequest?.url,
+              let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+            return XCTFail("URL 구성 실패")
+        }
+
+        XCTAssertEqual(components.path, "/v2/search/vclip", "요청 경로가 올바르지 않음")
+
+        let queryDict = Dictionary(uniqueKeysWithValues: (components.queryItems ?? []).map { ($0.name, $0.value ?? "") })
+        XCTAssertEqual(queryDict["query"], "ios")
+        XCTAssertEqual(queryDict["sort"], "accuracy")
+        XCTAssertEqual(queryDict["page"], "3")
+        XCTAssertEqual(queryDict["size"], "15")
+    }
 
     // 3) 카카오 플랫폼 오류 본문 → KakaoAPIError.platform 매핑
     func test_kakaoPlatformError_mapsToPlatform() async {
