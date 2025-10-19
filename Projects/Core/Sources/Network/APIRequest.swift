@@ -23,14 +23,21 @@ public extension APIRequest {
     var body: Data? { nil }
 
     func buildURLRequest() throws -> URLRequest {
-        let url = baseURL.appendingPathComponent(path)
+        let cleanPath = path.hasPrefix("/") ? String(path.dropFirst()) : path
+        let url = baseURL.appendingPathComponent(cleanPath)
+
         var comps = URLComponents(url: url, resolvingAgainstBaseURL: false)
-        if !queryItems.isEmpty { comps?.queryItems = queryItems }
-        guard let finalURL = comps?.url else { throw NetworkError.invalidURL }
-        
+        comps?.queryItems = queryItems.isEmpty ? nil : queryItems
+
+        guard let finalURL = comps?.url else {
+            throw NetworkError.invalidURL
+        }
+
         var req = URLRequest(url: finalURL)
         req.httpMethod = method.rawValue
-        if let body { req.httpBody = body }
+        if let body {
+            req.httpBody = body
+        }
         headers.forEach { key, value in
             req.setValue(value, forHTTPHeaderField: key)
         }
