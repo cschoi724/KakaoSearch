@@ -41,15 +41,25 @@ struct ImageResultsView: View {
                             Array(viewStore.items.enumerated()),
                             id:  \.offset,
                             content: { index, item in
-                                ImageCardView(item: item, width: cellWidth)
-                                    .onAppear {
-                                        if index >= viewStore.items.count - 4 {
-                                            viewStore.send(.loadNextPage)
+                                NavigationLink {
+                                    ImageDetailView(
+                                        store: Store(
+                                            initialState: ImageDetailFeature.State(
+                                                selected: item,
+                                                relatedImages: viewStore.items
+                                            ),
+                                            reducer: { ImageDetailFeature() }
+                                        )
+                                    )
+                                } label: {
+                                    ImageCardView(item: item, width: cellWidth)
+                                        .onAppear {
+                                            if index >= viewStore.items.count - 4 {
+                                                viewStore.send(.loadNextPage)
+                                            }
                                         }
-                                    }
-                                    .onTapGesture {
-                                        viewStore.send(.didSelect(item))
-                                    }
+                                }
+   
                             }
                         )
                     }

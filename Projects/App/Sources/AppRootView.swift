@@ -15,11 +15,13 @@ struct AppRootView: View {
     private let env = AppDependency.shared.makeSearchEnv()
 
     var body: some View {
-        SearchRootView(
-            store: Store(
-                initialState: SearchFeature.State(),
-                reducer: { SearchFeature(env: env) }
+        NavigationStack {
+            SearchRootView(
+                store: Store(
+                    initialState: SearchFeature.State(),
+                    reducer: { SearchFeature(env: env) }
+                )
             )
-        )
+        }
     }
 }

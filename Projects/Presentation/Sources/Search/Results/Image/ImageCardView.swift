@@ -15,10 +15,10 @@ struct ImageCardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            let w = CGFloat(item.width)
-            let h = CGFloat(item.height)
-            let ratio = (w > 0 && h > 0) ? (h / w) : 1.0
-            let height = width * ratio
+            let height = width * max(
+                0.1,
+                CGFloat(item.height) / max(CGFloat(item.width), 1)
+            )
             
             CommonImage(source: .remote(item.thumbnailUrl))
                 .scaledToFill()

@@ -19,7 +19,7 @@ final class AppDependency {
     private init() {
         // Auth
         container.register(AuthProvider.self) { _ in
-            KakaoAPIKeyAuthProvider(apiKey: "dbfba2056a58f303b36f4d4e5453b737")
+            KakaoAPIKeyAuthProvider(apiKey: "3a07d71e13ed5cfb14121c63e7282944")
         }
 
         // Network

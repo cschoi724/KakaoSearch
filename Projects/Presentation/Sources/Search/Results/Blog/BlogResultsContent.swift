@@ -13,7 +13,7 @@ struct BlogResultsContent: View {
     let items: [BlogItem]
     let isLoading: Bool
     let onRefresh: () -> Void
-    let onSelect: (Int) -> Void
+    let onSelect: (BlogItem) -> Void
     let onLoadNext: () -> Void
 
     var body: some View {

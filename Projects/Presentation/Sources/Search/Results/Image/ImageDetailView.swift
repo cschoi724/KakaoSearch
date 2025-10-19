@@ -12,7 +12,8 @@ import Domain
 
 public struct ImageDetailView: View {
     let store: StoreOf<ImageDetailFeature>
-
+    @Environment(\.dismiss) private var dismiss
+    
     public init(store: StoreOf<ImageDetailFeature>) {
         self.store = store
     }
@@ -22,7 +23,7 @@ public struct ImageDetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     ImageDetailHeader(
-                        backTapped: { viewStore.send(.closeButtonTapped) }
+                        backTapped: { dismiss() }
                     )
                     ImageHeroImageCard(item: viewStore.selected)
                     HStack(spacing: 6) {
@@ -35,6 +36,7 @@ public struct ImageDetailView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
+                    .padding(.horizontal, 16)
                     Rectangle()
                         .fill(Color(.systemGray6))
                         .frame(height: 4)

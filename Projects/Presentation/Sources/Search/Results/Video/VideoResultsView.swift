@@ -29,7 +29,9 @@ public struct VideoResultsView: View {
                         isEnd: viewStore.isEnd,
                         loadNextPage: { viewStore.send(.loadNextPage) },
                         didSelect: { item in
-                            viewStore.send(.didSelect(item))
+                            if let url = URL(string: item.url) {
+                                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                            }
                         }
                     )
                 }

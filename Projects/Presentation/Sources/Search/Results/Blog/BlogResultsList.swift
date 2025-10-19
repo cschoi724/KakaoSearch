@@ -11,14 +11,14 @@ import Domain
 
 struct BlogResultsList: View {
     let items: [BlogItem]
-    let onSelect: (Int) -> Void
+    let onSelect: (BlogItem) -> Void
     let onLoadNext: () -> Void
 
     var body: some View {
         List {
             ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                 Button {
-                    onSelect(index)
+                    onSelect(item)
                 } label: {
                     BlogResultRow(item: item)
                 }

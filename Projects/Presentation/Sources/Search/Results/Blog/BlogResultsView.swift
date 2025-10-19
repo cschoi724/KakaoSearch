@@ -11,7 +11,8 @@ import ComposableArchitecture
 
 public struct BlogResultsView: View {
     let store: StoreOf<BlogResultsFeature>
-
+    @Environment(\.openURL) private var openURL
+    
     public init(store: StoreOf<BlogResultsFeature>) {
         self.store = store
     }
@@ -25,8 +26,10 @@ public struct BlogResultsView: View {
                     onRefresh: {
                         viewStore.send(.refresh)
                     },
-                    onSelect: {
-                        index in viewStore.send(.didSelect(index))
+                    onSelect: { item in
+                        if let url = URL(string: item.url) {
+                            openURL(url)
+                        }
                     },
                     onLoadNext: {
                         viewStore.send(.loadNextPage)
