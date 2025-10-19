@@ -14,7 +14,7 @@ final class SaveRecentQueryUseCaseTests: XCTestCase {
     // 1) 저장 요청이 전달되고, 저장 직후 전체 목록이 반환되는지
     func test_execute_savesQuery_andReturnsAll() {
         let repo = RecentSearchRepositoryStub()
-        let sut = SaveRecentQueryUseCase(repo: repo)
+        let sut = SaveRecentQueryUseCaseImpl(repo: repo)
         
         let list1 = sut("swift")
         let list2 = sut("tca")

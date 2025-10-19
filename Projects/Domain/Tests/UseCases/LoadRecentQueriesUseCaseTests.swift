@@ -16,7 +16,7 @@ final class LoadRecentQueriesUseCaseTests: XCTestCase {
         let repo = RecentSearchRepositoryStub()
         repo.save("swift")
         repo.save("tca")
-        let sut = LoadRecentQueriesUseCase(repo: repo)
+        let sut = LoadRecentQueriesUseCaseImpl(repo: repo)
         let list = sut()
         XCTAssertEqual(list, ["swift", "tca"])
     }
@@ -24,7 +24,7 @@ final class LoadRecentQueriesUseCaseTests: XCTestCase {
     // 2) 저장 데이터가 없으면 빈 배열을 반환하는지
     func test_execute_returnsEmptyWhenNoData() {
         let repo = RecentSearchRepositoryStub()
-        let sut = LoadRecentQueriesUseCase(repo: repo)
+        let sut = LoadRecentQueriesUseCaseImpl(repo: repo)
         let list = sut()
         XCTAssertTrue(list.isEmpty)
     }

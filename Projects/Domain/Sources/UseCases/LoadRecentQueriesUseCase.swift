@@ -8,7 +8,12 @@
 
 import Foundation
 
-public struct LoadRecentQueriesUseCase {
+public protocol LoadRecentQueriesUseCase {
+    @discardableResult
+    func callAsFunction() -> [String]
+}
+
+public struct LoadRecentQueriesUseCaseImpl: LoadRecentQueriesUseCase {
     private let repo: RecentSearchRepository
 
     public init(repo: RecentSearchRepository) { self.repo = repo }
