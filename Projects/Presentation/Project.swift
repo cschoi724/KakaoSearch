@@ -7,7 +7,9 @@ let presentation = Project.target(
   bundleId: Module.Presentation.bundleId,
   infoPlist: Info.framework,
   sources: ["Sources/**"],
-  resources: ["Resources/**"],
+  resources: [
+      "Sources/Resources/**"
+  ],
   dependencies: [
     .project(target: Module.Domain.rawValue, path: "../Domain"),
     .project(target: Module.Core.rawValue, path: "../Core"),
