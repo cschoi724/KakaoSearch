@@ -1,5 +1,5 @@
 //
-//  BlogResultsFeature.swift
+//  VideoResultsFeature.swift
 //  Presentation
 //
 //  Created by 일하는석찬 on 10/19/25.
@@ -10,11 +10,11 @@ import Foundation
 import ComposableArchitecture
 import Domain
 
-public struct BlogResultsFeature: Reducer {
+public struct VideoResultsFeature: Reducer {
 
     public struct State: Equatable {
         public var query: String = ""
-        public var items: [BlogItem] = []
+        public var items: [VideoItem] = []
         public var page: Int = 1
         public var size: Int = 15
         public var isLoading: Bool = false
@@ -27,19 +27,16 @@ public struct BlogResultsFeature: Reducer {
 
     public enum Action {
         case setQuery(String)
-        case submit // 검색 실행(첫 페이지)
-        case loadNextPage   // 리스트 끝에서 추가 로드
-        case refresh    // 당겨서 새로고침(첫 페이지 갱신)
+        case submit
+        case loadNextPage
+        case refresh
+        case didSelect(VideoItem)
 
-        case searchResponse(TaskResult<(items: [BlogItem], pageInfo: PageInfo)>, isRefresh: Bool)
+        case searchResponse(TaskResult<(items: [VideoItem], pageInfo: PageInfo)>, isRefresh: Bool)
     }
 
     public struct Environment: Sendable {
-        public var searchBlogs: @Sendable (SearchRequest) async throws -> (items: [BlogItem], pageInfo: PageInfo)
-
-        public init(searchBlogs: @escaping @Sendable (SearchRequest) async throws -> (items: [BlogItem], pageInfo: PageInfo)) {
-            self.searchBlogs = searchBlogs
-        }
+        let searchVideos: SearchVideosUseCase
     }
 
     private let env: Environment
@@ -57,9 +54,7 @@ public struct BlogResultsFeature: Reducer {
                 return .none
 
             case .submit:
-                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                    return .none
-                }
+                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return .none }
                 state.isLoading = true
                 state.isRefreshing = false
                 state.errorMessage = nil
@@ -77,7 +72,7 @@ public struct BlogResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchBlogs(request) },
+                            TaskResult { try await env.searchVideos(request) },
                             isRefresh: true
                         )
                     )
@@ -99,16 +94,14 @@ public struct BlogResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchBlogs(request) },
+                            TaskResult { try await env.searchVideos(request) },
                             isRefresh: false
                         )
                     )
                 }
 
             case .refresh:
-                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                    return .none
-                }
+                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return .none }
                 state.isRefreshing = true
                 state.isLoading = true
                 state.errorMessage = nil
@@ -125,11 +118,14 @@ public struct BlogResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchBlogs(request) },
+                            TaskResult { try await env.searchVideos(request) },
                             isRefresh: true
                         )
                     )
                 }
+                
+            case .didSelect(let item):
+                return .none
 
             case let .searchResponse(.success(result), isRefresh):
                 state.isLoading = false

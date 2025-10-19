@@ -1,5 +1,5 @@
 //
-//  ImageResultsFeature.swift
+//  BlogResultsFeature.swift
 //  Presentation
 //
 //  Created by 일하는석찬 on 10/19/25.
@@ -10,11 +10,11 @@ import Foundation
 import ComposableArchitecture
 import Domain
 
-public struct ImageResultsFeature: Reducer {
+public struct BlogResultsFeature: Reducer {
 
     public struct State: Equatable {
         public var query: String = ""
-        public var items: [ImageItem] = []
+        public var items: [BlogItem] = []
         public var page: Int = 1
         public var size: Int = 15
         public var isLoading: Bool = false
@@ -27,19 +27,16 @@ public struct ImageResultsFeature: Reducer {
 
     public enum Action {
         case setQuery(String)
-        case submit
-        case loadNextPage
-        case refresh
+        case submit // 검색 실행(첫 페이지)
+        case loadNextPage   // 리스트 끝에서 추가 로드
+        case refresh    // 당겨서 새로고침(첫 페이지 갱신)
+        case didSelect(Int)
 
-        case searchResponse(TaskResult<(items: [ImageItem], pageInfo: PageInfo)>, isRefresh: Bool)
+        case searchResponse(TaskResult<(items: [BlogItem], pageInfo: PageInfo)>, isRefresh: Bool)
     }
 
     public struct Environment: Sendable {
-        public var searchImages: @Sendable (SearchRequest) async throws -> (items: [ImageItem], pageInfo: PageInfo)
-
-        public init(searchImages: @escaping @Sendable (SearchRequest) async throws -> (items: [ImageItem], pageInfo: PageInfo)) {
-            self.searchImages = searchImages
-        }
+        let searchBlogs: SearchBlogsUseCase
     }
 
     private let env: Environment
@@ -57,7 +54,9 @@ public struct ImageResultsFeature: Reducer {
                 return .none
 
             case .submit:
-                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return .none }
+                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    return .none
+                }
                 state.isLoading = true
                 state.isRefreshing = false
                 state.errorMessage = nil
@@ -75,7 +74,7 @@ public struct ImageResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchImages(request) },
+                            TaskResult { try await env.searchBlogs(request) },
                             isRefresh: true
                         )
                     )
@@ -97,14 +96,16 @@ public struct ImageResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchImages(request) },
+                            TaskResult { try await env.searchBlogs(request) },
                             isRefresh: false
                         )
                     )
                 }
 
             case .refresh:
-                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return .none }
+                guard !state.query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    return .none
+                }
                 state.isRefreshing = true
                 state.isLoading = true
                 state.errorMessage = nil
@@ -121,12 +122,13 @@ public struct ImageResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchImages(request) },
+                            TaskResult { try await env.searchBlogs(request) },
                             isRefresh: true
                         )
                     )
                 }
-
+            case .didSelect(let index):
+                return .none
             case let .searchResponse(.success(result), isRefresh):
                 state.isLoading = false
                 state.isRefreshing = false

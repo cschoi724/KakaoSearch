@@ -15,6 +15,7 @@ public struct SearchFeature: Reducer {
     public struct State: Equatable {
         public var query: String = ""
         public var isEditing: Bool = false
+        public var submittedQuery: String?
 
         public var recent: RecentQueriesFeature.State = .init()
         public var results: SearchResultsFeature.State = .init()
@@ -61,7 +62,7 @@ public struct SearchFeature: Reducer {
                 return .none
 
             case .onAppear:
-                // 화면 진입 시 최근검색 로드 지시
+                // 화면 진입 시 최근검색 로드
                 return .send(.recent(.loadRequested))
 
             case let .queryChanged(text):
@@ -73,6 +74,7 @@ public struct SearchFeature: Reducer {
             case .submit:
                 guard !state.query.isEmpty else { return .none }
                 // 최근 검색어 저장하고, 검색 실행
+                state.submittedQuery = state.query
                 return .merge(
                     .send(.recent(.saveRequested(state.query))),
                     .send(.results(.searchRequested(state.query)))
@@ -86,6 +88,7 @@ public struct SearchFeature: Reducer {
             case let .recent(.didSelect(query)):
                 // 최근검색 탭하면 쿼리 반영 + 검색 실행
                 state.query = query
+                state.submittedQuery = query
                 return .merge(
                     .send(.results(.searchRequested(query)))
                 )

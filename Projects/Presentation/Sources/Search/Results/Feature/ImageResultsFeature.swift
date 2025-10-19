@@ -1,5 +1,5 @@
 //
-//  VideoResultsFeature.swift
+//  ImageResultsFeature.swift
 //  Presentation
 //
 //  Created by 일하는석찬 on 10/19/25.
@@ -10,11 +10,11 @@ import Foundation
 import ComposableArchitecture
 import Domain
 
-public struct VideoResultsFeature: Reducer {
+public struct ImageResultsFeature: Reducer {
 
     public struct State: Equatable {
         public var query: String = ""
-        public var items: [VideoItem] = []
+        public var items: [ImageItem] = []
         public var page: Int = 1
         public var size: Int = 15
         public var isLoading: Bool = false
@@ -30,16 +30,13 @@ public struct VideoResultsFeature: Reducer {
         case submit
         case loadNextPage
         case refresh
+        case didSelect(ImageItem)
 
-        case searchResponse(TaskResult<(items: [VideoItem], pageInfo: PageInfo)>, isRefresh: Bool)
+        case searchResponse(TaskResult<(items: [ImageItem], pageInfo: PageInfo)>, isRefresh: Bool)
     }
 
     public struct Environment: Sendable {
-        public var searchVideos: @Sendable (SearchRequest) async throws -> (items: [VideoItem], pageInfo: PageInfo)
-
-        public init(searchVideos: @escaping @Sendable (SearchRequest) async throws -> (items: [VideoItem], pageInfo: PageInfo)) {
-            self.searchVideos = searchVideos
-        }
+        let searchImages: SearchImagesUseCase
     }
 
     private let env: Environment
@@ -75,7 +72,7 @@ public struct VideoResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchVideos(request) },
+                            TaskResult { try await env.searchImages(request) },
                             isRefresh: true
                         )
                     )
@@ -97,7 +94,7 @@ public struct VideoResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchVideos(request) },
+                            TaskResult { try await env.searchImages(request) },
                             isRefresh: false
                         )
                     )
@@ -121,7 +118,7 @@ public struct VideoResultsFeature: Reducer {
                 return .run { [env] send in
                     await send(
                         .searchResponse(
-                            TaskResult { try await env.searchVideos(request) },
+                            TaskResult { try await env.searchImages(request) },
                             isRefresh: true
                         )
                     )
@@ -139,7 +136,8 @@ public struct VideoResultsFeature: Reducer {
                     state.items.append(contentsOf: result.items)
                 }
                 return .none
-
+            case .didSelect(let item):
+                return .none
             case let .searchResponse(.failure(error), _):
                 state.isLoading = false
                 state.isRefreshing = false
