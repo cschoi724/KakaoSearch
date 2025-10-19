@@ -36,7 +36,10 @@ public struct VideoResultsFeature: Reducer {
     }
 
     public struct Environment: Sendable {
-        let searchVideos: SearchVideosUseCase
+        public let searchVideos: SearchVideosUseCase
+        public init(searchVideos: SearchVideosUseCase) {
+            self.searchVideos = searchVideos
+        }
     }
 
     private let env: Environment

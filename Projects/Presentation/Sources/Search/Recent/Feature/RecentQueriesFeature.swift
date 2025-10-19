@@ -30,8 +30,12 @@ public struct RecentQueriesFeature: Reducer {
 
 
     public struct Environment {
-        let loadRecentQueries: LoadRecentQueriesUseCase
-        let saveRecentQuery: SaveRecentQueryUseCase
+        public let loadRecentQueries: LoadRecentQueriesUseCase
+        public let saveRecentQuery: SaveRecentQueryUseCase
+        public init(loadRecentQueries: LoadRecentQueriesUseCase, saveRecentQuery: SaveRecentQueryUseCase) {
+            self.loadRecentQueries = loadRecentQueries
+            self.saveRecentQuery = saveRecentQuery
+        }
     }
 
     private let env: Environment

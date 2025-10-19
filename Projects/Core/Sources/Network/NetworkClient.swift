@@ -21,7 +21,7 @@ public final class DefaultNetworkClient: NetworkClient {
 
     public init(
         session: Session = .default,
-        logger: NetworkLogger? = nil,
+        logger: NetworkLogger? = ConsoleNetworkLogger(),
         authProviders: [AuthProvider] = []
     ) {
         self.session = session

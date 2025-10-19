@@ -38,8 +38,13 @@ public struct SearchFeature: Reducer {
     }
     
     public struct Environment {
-        let recentEnv: RecentQueriesFeature.Environment
-        let resultsEnv: SearchResultsFeature.Environment
+        public let recentEnv: RecentQueriesFeature.Environment
+        public  let resultsEnv: SearchResultsFeature.Environment
+        
+        public init(recentEnv: RecentQueriesFeature.Environment, resultsEnv: SearchResultsFeature.Environment) {
+            self.recentEnv = recentEnv
+            self.resultsEnv = resultsEnv
+        }
     }
     
     private let env: Environment

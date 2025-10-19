@@ -36,7 +36,10 @@ public struct BlogResultsFeature: Reducer {
     }
 
     public struct Environment: Sendable {
-        let searchBlogs: SearchBlogsUseCase
+        public let searchBlogs: SearchBlogsUseCase
+        public  init(searchBlogs: SearchBlogsUseCase) {
+            self.searchBlogs = searchBlogs
+        }
     }
 
     private let env: Environment
@@ -134,7 +137,7 @@ public struct BlogResultsFeature: Reducer {
                 state.isRefreshing = false
                 state.errorMessage = nil
                 state.isEnd = result.pageInfo.isEnd
-
+                print(result)
                 if isRefresh {
                     state.items = result.items
                 } else {
@@ -143,6 +146,7 @@ public struct BlogResultsFeature: Reducer {
                 return .none
 
             case let .searchResponse(.failure(error), _):
+                print(error)
                 state.isLoading = false
                 state.isRefreshing = false
                 state.errorMessage = (error as NSError).localizedDescription

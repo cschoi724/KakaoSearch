@@ -12,6 +12,7 @@ let app = Project.target(
     .project(target: Module.Presentation.rawValue, path: "../Presentation"),
     .project(target: Module.Domain.rawValue, path: "../Domain"),
     .project(target: Module.Core.rawValue, path: "../Core"),
+    .project(target: Module.Data.rawValue, path: "../Data"),
     .alamofire, .tca, .swinject
   ],
   deploymentTargets: .iOS("17.0")

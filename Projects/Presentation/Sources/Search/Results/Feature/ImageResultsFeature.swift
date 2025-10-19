@@ -36,7 +36,10 @@ public struct ImageResultsFeature: Reducer {
     }
 
     public struct Environment: Sendable {
-        let searchImages: SearchImagesUseCase
+        public let searchImages: SearchImagesUseCase
+        public init(searchImages: SearchImagesUseCase) {
+            self.searchImages = searchImages
+        }
     }
 
     private let env: Environment
